@@ -53,6 +53,11 @@
 		{
 			"Name": "MultiUserClient",
 			"Enabled": true
+		},
+		{
+			"Name": "DonMeshPainting",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/d0ef1f750b5246b297d084b6f8355c13"
 		}
 	]
 }
