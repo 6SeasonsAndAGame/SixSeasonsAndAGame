@@ -11,6 +11,21 @@ class CTG_API AFPSCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+	class AWeapon* Weapon;
+
+	UPROPERTY(EditDefaultsOnly, Category = Weapon)
+		FName WeaponSocket;
+
+	UPROPERTY(EditDefaultsOnly, Category = Weapon)
+		TSubclassOf<class AWeapon> WeaponClass;
+
+	/** Pawn mesh: 1st person view (arms; seen only by self) */
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		class USkeletalMeshComponent* Mesh1P;
+
+	/** First person camera */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class UCameraComponent* FirstPersonCameraComponent;
 public:
 	// Sets default values for this character's properties
 	AFPSCharacter();
@@ -18,6 +33,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual void PostInitializeComponents() override;
 
 public:	
 	// Called every frame
@@ -31,4 +48,7 @@ public:
 
 	void Fire();
 
+	FName GetWeaponSocket();
+
+	USkeletalMeshComponent* GetMesh1P() { return Mesh1P; }
 };

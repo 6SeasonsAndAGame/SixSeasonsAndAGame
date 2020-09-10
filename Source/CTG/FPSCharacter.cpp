@@ -2,13 +2,35 @@
 
 
 #include "FPSCharacter.h"
+#include "Camera/CameraComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Weapon.h"
 
 // Sets default values
 AFPSCharacter::AFPSCharacter()
 {
+	GetCapsuleComponent()->InitCapsuleSize(48.f, 87.0f);
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	// Set size for collision capsule
 
+	// Create a CameraComponent	
+	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
+	FirstPersonCameraComponent->SetRelativeLocation(FVector(-39.56f, 1.75f, 64.f)); // Position the camera
+	FirstPersonCameraComponent->bUsePawnControlRotation = true;
+
+	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
+	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
+	Mesh1P->SetOnlyOwnerSee(true);
+	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
+	Mesh1P->bCastDynamicShadow = false;
+	Mesh1P->CastShadow = false;
+	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
+	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
+
+	WeaponSocket = FName(TEXT("GripPoint"));
 }
 
 // Called when the game starts or when spawned
@@ -16,6 +38,20 @@ void AFPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AFPSCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	GetWorldTimerManager().SetTimerForNextTick([this]() {
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		Weapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, SpawnParams);
+		if (Weapon) {
+			Weapon->EquipToPlayer(this);
+		}
+	});
 }
 
 // Called every frame
@@ -32,8 +68,8 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFPSCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::MoveRight);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 }
@@ -50,5 +86,10 @@ void AFPSCharacter::MoveRight(float Axis)
 
 void AFPSCharacter::Fire()
 {
+}
+
+FName AFPSCharacter::GetWeaponSocket()
+{
+	return WeaponSocket;
 }
 
