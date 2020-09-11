@@ -14,6 +14,11 @@ class CTG_API AWeapon : public AActor
 	GENERATED_BODY()
 
 	class AFPSCharacter* OwningPawn;
+
+	UPROPERTY(EditDefaultsOnly, Category = Weapon)
+		FVector MuzzleOffset {
+		100.0f, 0.0f, 10.0f
+	};
 public:	
 	// Sets default values for this actor's properties
 	AWeapon();
@@ -29,6 +34,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Projectile)
 		TSubclassOf<class AProjectile> ProjectileClass;
+
+	/** Sound to play each time we fire */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		class USoundBase* FireSound;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

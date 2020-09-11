@@ -26,11 +26,17 @@ class CTG_API AFPSCharacter : public ACharacter
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FirstPersonCameraComponent;
+
 public:
 	// Sets default values for this character's properties
 	AFPSCharacter();
 
 protected:
+
+	/** AnimMontage to play each time we fire */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		class UAnimMontage* FireAnimation;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

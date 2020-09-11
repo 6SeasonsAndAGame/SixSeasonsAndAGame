@@ -72,6 +72,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::Fire);
 }
 
 void AFPSCharacter::MoveForward(float Axis)
@@ -86,6 +87,21 @@ void AFPSCharacter::MoveRight(float Axis)
 
 void AFPSCharacter::Fire()
 {
+	if (Weapon) {
+		Weapon->Fire();
+		if (FireAnimation)
+		{
+			// Get the animation object for the arms mesh
+			UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+			if (AnimInstance)
+			{
+				AnimInstance->Montage_Play(FireAnimation, 1.0f);
+			}
+		}
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Weapon was Null"));
+	}
 }
 
 FName AFPSCharacter::GetWeaponSocket()
