@@ -5,6 +5,8 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "FPSCharacter.h"
+#include "Weapon.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -14,7 +16,7 @@ AProjectile::AProjectile()
 
 	// Use a sphere as a simple collision representation
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
-	CollisionComp->InitSphereRadius(5.0f);
+	CollisionComp->InitSphereRadius(15.0f);
 	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
 	CollisionComp->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);		// set up a notification for when this component hits something blocking
 
@@ -37,16 +39,20 @@ AProjectile::AProjectile()
 
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
+	SetReplicates(true);
+	SetReplicateMovement(true);
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	auto ptr = Cast<AFPSCharacter>(OtherActor);
+	auto Character = Cast<AFPSCharacter>(OtherActor);
 	// Only add impulse and destroy projectile if we hit a physics
-	if(ptr != nullptr && ptr != GetOwner() && ptr != GetInstigator())
+	if (Character != nullptr && Character != GetOwner())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Projectile collided with Actor %s"), *ptr->GetFName().ToString());
-		//Destroy();
+		UGameplayStatics::ApplyPointDamage(Character, Cast<AWeapon>(GetOwner())->GetDamage(), NormalImpulse, Hit, GetInstigator()->GetController(), this, Cast<AWeapon>(GetOwner())->GetDamageType());
+	}
+	if (OtherActor != GetOwner() && OtherActor != GetInstigator()) {
+		Destroy();
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Projectile collided with Actor %s"), *OtherActor->GetFName().ToString());
 }
@@ -55,7 +61,9 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	CollisionComp->MoveIgnoreActors.Add(GetInstigator());
+	CollisionComp->MoveIgnoreActors.Add(GetOwner());
 }
 
 // Called every frame

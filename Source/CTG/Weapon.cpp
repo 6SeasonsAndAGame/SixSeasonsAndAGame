@@ -16,6 +16,9 @@ AWeapon::AWeapon()
 
 	GunMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Gun Mesh"));
 	GunMesh->SetupAttachment(SceneComponent);
+
+	Damage = 1.0f;
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
@@ -34,11 +37,18 @@ void AWeapon::Tick(float DeltaTime)
 
 void AWeapon::Fire()
 {
-	ServerFire();
-	if (FireSound)
+	if (!HasAuthority())
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		ServerFire();
+		if (FireSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		}
 	}
+}
+
+bool AWeapon::ServerFire_Validate() {
+	return true;
 }
 
 void AWeapon::ServerFire_Implementation()
@@ -53,25 +63,20 @@ void AWeapon::ServerFire_Implementation()
 			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
 			FVector SpawnLocation;
 
-			GetOwner()->GetActorEyesViewPoint(SpawnLocation, SpawnRotation);
+			OwningPawn->GetActorEyesViewPoint(SpawnLocation, SpawnRotation);
 
 			//Set Spawn Collision Handling Override
 			FActorSpawnParameters ActorSpawnParams;
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+			ActorSpawnParams.Owner = this;
+			ActorSpawnParams.Instigator = OwningPawn;
 
 			// spawn the projectile at the muzzle
 			auto ptr = World->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-			if (ptr == nullptr)
+			if (ptr == nullptr) {
 				UE_LOG(LogTemp, Warning, TEXT("Projectile could not be spawned"));
-			ptr->SetOwner(this);
-			ptr->SetInstigator(GetInstigator());
+			}
 		}
-		else {
-			UE_LOG(LogTemp, Warning, TEXT("world was Null"));
-		}
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("ProjectileClass was null"));
 	}
 }
 
@@ -80,6 +85,7 @@ void AWeapon::EquipToPlayer(AFPSCharacter* NewOwner)
 	SetOwner(NewOwner);
 	SetInstigator(NewOwner);
 	OwningPawn = NewOwner;
+
 	if (GunMesh) {
 		FAttachmentTransformRules AttachRules(EAttachmentRule::KeepRelative, true);
 		GunMesh->AttachToComponent(NewOwner->GetMesh1P(), AttachRules, NewOwner->GetWeaponSocket());

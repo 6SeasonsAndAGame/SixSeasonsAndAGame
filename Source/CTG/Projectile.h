@@ -16,8 +16,13 @@ class CTG_API AProjectile : public AActor
 	class USphereComponent* CollisionComp;
 
 	/** Projectile movement component */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, Category = Movement)
 		class UProjectileMovementComponent* ProjectileMovement;
+
+	// Static Mesh used to provide a visual representation of the object.
+	UPROPERTY(EditDefaultsOnly, Category = Mesh)
+		class UStaticMeshComponent* StaticMesh;
+
 
 	UPROPERTY(EditDefaultsOnly)
 		float ProjectileSpeed;
