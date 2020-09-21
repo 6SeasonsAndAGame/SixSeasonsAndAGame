@@ -7,10 +7,11 @@
 #include "FPSPlayerController.h"
 #include "TDPlayerStart.h"
 #include "TDGameStateBase.h"
+#include "Kismet/GameplayStatics.h"
 
 ATDGameMode::ATDGameMode() : Super()
 {
-
+	bUseSeamlessTravel = true;
 }
 
 AActor* ATDGameMode::ChoosePlayerStart_Implementation(AController* Player)
@@ -21,6 +22,8 @@ AActor* ATDGameMode::ChoosePlayerStart_Implementation(AController* Player)
 void ATDGameMode::PostLogin(APlayerController* PlayerController)
 {
 	Super::PostLogin(PlayerController);
+
+	UE_LOG(LogTemp, Warning, TEXT("ATDGameMode::PostLogin() called"))
 
 	static int LastTeam = 0;
 	ATDPlayerState* PlayerState = PlayerController->GetPlayerState<ATDPlayerState>();
@@ -100,7 +103,7 @@ void ATDGameMode::OnTeamWin(uint8 WinningTeam)
 	auto GS = GetGameState<ATDGameStateBase>();
 	UE_LOG(LogTemp, Warning, TEXT("Team 1 Score: %i, Team 2 Score: %i"), GS->TeamScores[0], GS->TeamScores[1]);
 
-	RestartGame();
+	EndMatch();
 }
 
 bool ATDGameMode::HasTeamWon(uint8 Team)
@@ -125,6 +128,11 @@ void ATDGameMode::DefaultTimer()
 		// Potentially do something?
 	}
 	else if (CurrentMatchState == MatchState::WaitingPostMatch) {
-		RestartGame();
+		for (APawn* Pawn : TActorRange<APawn>(GetWorld()))
+		{
+			Pawn->TurnOff();
+		}
+		UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), true, TEXT("listen"));
+		//RestartGame();
 	}
 }

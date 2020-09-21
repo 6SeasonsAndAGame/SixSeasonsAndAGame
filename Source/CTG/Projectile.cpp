@@ -49,12 +49,20 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	// Only add impulse and destroy projectile if we hit a physics
 	if (Character != nullptr && Character != GetOwner())
 	{
-		UGameplayStatics::ApplyPointDamage(Character, Cast<AWeapon>(GetOwner())->GetDamage(), NormalImpulse, Hit, GetInstigator()->GetController(), this, Cast<AWeapon>(GetOwner())->GetDamageType());
+		if (!HasAuthority()) {
+			ServerOnHit(HitComp, OtherActor, OtherComp, NormalImpulse, Hit);
+		}
 	}
 	if (OtherActor != GetOwner() && OtherActor != GetInstigator()) {
 		Destroy();
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Projectile collided with Actor %s"), *OtherActor->GetFName().ToString());
+}
+
+void AProjectile::ServerOnHit_Implementation(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	auto Character = Cast<AFPSCharacter>(OtherActor);
+	UGameplayStatics::ApplyPointDamage(Character, Cast<AWeapon>(GetOwner())->GetDamage(), NormalImpulse, Hit, GetInstigator()->GetController(), this, Cast<AWeapon>(GetOwner())->GetDamageType());
 }
 
 // Called when the game starts or when spawned
