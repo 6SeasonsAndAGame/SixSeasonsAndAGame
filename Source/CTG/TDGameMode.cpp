@@ -16,7 +16,14 @@ ATDGameMode::ATDGameMode() : Super()
 
 AActor* ATDGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
-	return nullptr;
+	TArray<ATDPlayerStart*> PlayerTeamStarts;
+
+	for (TActorIterator<ATDPlayerStart> It(GetWorld()); It; ++It)
+	{
+		PlayerTeamStarts.Add(*It);
+	}
+
+	return PlayerTeamStarts[FMath::RandRange(0, PlayerTeamStarts.Num() - 1)];
 }
 
 void ATDGameMode::PostLogin(APlayerController* PlayerController)
@@ -25,28 +32,28 @@ void ATDGameMode::PostLogin(APlayerController* PlayerController)
 
 	UE_LOG(LogTemp, Warning, TEXT("ATDGameMode::PostLogin() called"))
 
-	static int LastTeam = 0;
-	ATDPlayerState* PlayerState = PlayerController->GetPlayerState<ATDPlayerState>();
-	PlayerState->SetTeam(LastTeam);
-	UE_LOG(LogTemp, Warning, TEXT("Player joined team %i"), PlayerState->GetTeam()
-	);
-	LastTeam = LastTeam == 0? 1 : 0; // Bitwise AND To switch between 0 and 1
+	//static int LastTeam = 0;
+	//ATDPlayerState* PlayerState = PlayerController->GetPlayerState<ATDPlayerState>();
+	//PlayerState->SetTeam(LastTeam);
+	//UE_LOG(LogTemp, Warning, TEXT("Player joined team %i"), PlayerState->GetTeam()
+	//);
+	//LastTeam = LastTeam == 0? 1 : 0; // Bitwise AND To switch between 0 and 1
 
-	TArray<ATDPlayerStart*> PlayerTeamStarts;
+	//TArray<ATDPlayerStart*> PlayerTeamStarts;
 
-	ATDPlayerState* CurrentPlayerState = PlayerController->GetPlayerState<ATDPlayerState>();
-	for (TActorIterator<ATDPlayerStart> It(GetWorld()); It; ++It)
-	{
-		if (CurrentPlayerState->GetTeam() == It->Team) {
-			PlayerTeamStarts.Add(*It);
-		}
-	}
-	ATDPlayerStart* FinalSpawnPoint = PlayerTeamStarts[FMath::RandRange(0, PlayerTeamStarts.Num() - 1)];
+	//ATDPlayerState* CurrentPlayerState = PlayerController->GetPlayerState<ATDPlayerState>();
+	//for (TActorIterator<ATDPlayerStart> It(GetWorld()); It; ++It)
+	//{
+	//	if (CurrentPlayerState->GetTeam() == It->Team) {
+	//		PlayerTeamStarts.Add(*It);
+	//	}
+	//}
+	//ATDPlayerStart* FinalSpawnPoint = PlayerTeamStarts[FMath::RandRange(0, PlayerTeamStarts.Num() - 1)];
 
-	UE_LOG(LogTemp, Warning, TEXT("Team: %i, Had %i Possible spawn locations"), PlayerState->GetTeam(), PlayerTeamStarts.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("Team: %i, Had %i Possible spawn locations"), PlayerState->GetTeam(), PlayerTeamStarts.Num());
 
-	auto NewCharacter = GetWorld()->SpawnActor<APawn>(DefaultPawnClass, FinalSpawnPoint->GetActorLocation(), FinalSpawnPoint->GetActorRotation());
-	PlayerController->Possess(NewCharacter);
+	//auto NewCharacter = GetWorld()->SpawnActor<APawn>(DefaultPawnClass, FinalSpawnPoint->GetActorLocation(), FinalSpawnPoint->GetActorRotation());
+	//PlayerController->Possess(NewCharacter);
 }
 
 void ATDGameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
@@ -59,6 +66,12 @@ void ATDGameMode::BeginPlay()
 	Super::BeginPlay();
 	FTimerHandle UnusedHandle;
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ATDGameMode::DefaultTimer, GetWorldSettings()->GetEffectiveTimeDilation(), true);
+	for (TActorIterator<AFPSPlayerController> It(GetWorld()); It; ++It)
+	{
+		if (It->GetCharacter() == nullptr) {
+			
+		}
+	}
 }
 
 void ATDGameMode::OnPlayerEliminated(AController* Eliminator, AController* EliminatedPlayer)
@@ -128,11 +141,6 @@ void ATDGameMode::DefaultTimer()
 		// Potentially do something?
 	}
 	else if (CurrentMatchState == MatchState::WaitingPostMatch) {
-		for (APawn* Pawn : TActorRange<APawn>(GetWorld()))
-		{
-			Pawn->TurnOff();
-		}
-		UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), true, TEXT("listen"));
-		//RestartGame();
+		RestartGame();
 	}
 }

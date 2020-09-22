@@ -24,7 +24,6 @@ class CTG_API AWeapon : public AActor
 	UPROPERTY(EditDefaultsOnly, Category = Damage)
 		float Damage;
 
-
 public:	
 	// Sets default values for this actor's properties
 	AWeapon();
@@ -46,7 +45,7 @@ protected:
 		class USoundBase* FireSound;	
 	
 	//The damage type and damage that will be done by this projectile
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Damage)
 		TSubclassOf<UDamageType> DamageType;
 
 	// Called when the game starts or when spawned
