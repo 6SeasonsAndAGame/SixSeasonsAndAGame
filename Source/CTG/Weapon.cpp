@@ -37,6 +37,7 @@ void AWeapon::Tick(float DeltaTime)
 
 void AWeapon::Fire()
 {
+	UE_LOG(LogTemp, Warning, TEXT("AWeapon::Fire() called"))
 	if (!HasAuthority())
 	{
 		ServerFire();
@@ -53,6 +54,7 @@ bool AWeapon::ServerFire_Validate() {
 
 void AWeapon::ServerFire_Implementation()
 {
+	UE_LOG(LogTemp, Warning, TEXT("AWeapon::ServerFire() called"))
 	// try and fire a projectile
 	if (ProjectileClass != nullptr)
 	{

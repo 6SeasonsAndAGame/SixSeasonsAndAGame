@@ -134,6 +134,7 @@ void AFPSCharacter::MoveRight(float Axis)
 
 void AFPSCharacter::Fire()
 {
+	UE_LOG(LogTemp, Warning, TEXT("AFPSCharacter::Fire() called"))
 	if (!HasAuthority() && Weapon) {
 		Weapon->Fire();
 	}
@@ -152,6 +153,7 @@ void AFPSCharacter::Fire()
 
 void AFPSCharacter::ServerFire_Implementation()
 {
+	UE_LOG(LogTemp, Warning, TEXT("AFPSCharacter::ServerFire() called"))
 	if (Weapon) {
 		Weapon->Fire();
 	}
