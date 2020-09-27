@@ -6,7 +6,7 @@
 #include "TDPlayerState.h"
 #include "FPSPlayerController.h"
 #include "TDPlayerStart.h"
-#include "TDGameStateBase.h"
+#include "TDGameState.h"
 #include "Kismet/GameplayStatics.h"
 
 ATDGameMode::ATDGameMode() : Super()
