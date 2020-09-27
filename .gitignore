@@ -51,7 +51,7 @@ SourceArt/**/*.tga
 Plugins/*/Binaries/*
 
 #So No Recompile
-!Binaries/*
+!Binaries/Win64/*
 
 # Builds
 Build/*
