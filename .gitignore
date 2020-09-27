@@ -49,6 +49,9 @@ SourceArt/**/*.tga
 Binaries/*
 Plugins/*/Binaries/*
 
+#So No Recompile
+!Binaries/Win64/*
+
 # Builds
 Build/*
 
@@ -69,6 +72,8 @@ Saved/*
 # Compiled source files for the engine to use
 Intermediate/*
 Plugins/*/Intermediate/*
+!Intermediate/Build/*
+!Intermediate/ProjectFiles/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
