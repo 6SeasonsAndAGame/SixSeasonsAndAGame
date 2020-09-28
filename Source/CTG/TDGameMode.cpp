@@ -32,12 +32,12 @@ void ATDGameMode::PostLogin(APlayerController* PlayerController)
 
 	UE_LOG(LogTemp, Warning, TEXT("ATDGameMode::PostLogin() called"))
 
-	//static int LastTeam = 0;
-	//ATDPlayerState* PlayerState = PlayerController->GetPlayerState<ATDPlayerState>();
-	//PlayerState->SetTeam(LastTeam);
-	//UE_LOG(LogTemp, Warning, TEXT("Player joined team %i"), PlayerState->GetTeam()
-	//);
-	//LastTeam = LastTeam == 0? 1 : 0; // Bitwise AND To switch between 0 and 1
+	static int LastTeam = 0;
+	ATDPlayerState* PlayerState = PlayerController->GetPlayerState<ATDPlayerState>();
+	PlayerState->SetTeam(LastTeam);
+	UE_LOG(LogTemp, Warning, TEXT("Player joined team %i"), PlayerState->GetTeam()
+	);
+	LastTeam = LastTeam == 0? 1 : 0; // Bitwise AND To switch between 0 and 1
 
 	//TArray<ATDPlayerStart*> PlayerTeamStarts;
 

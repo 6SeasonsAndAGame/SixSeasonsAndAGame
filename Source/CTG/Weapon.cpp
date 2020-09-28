@@ -38,14 +38,14 @@ void AWeapon::Tick(float DeltaTime)
 void AWeapon::Fire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("AWeapon::Fire() called"))
-	if (!HasAuthority())
-	{
+	//if (!HasAuthority())
+	//{
 		ServerFire();
 		if (FireSound)
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 		}
-	}
+	//}
 }
 
 bool AWeapon::ServerFire_Validate() {

@@ -138,7 +138,7 @@ void AFPSCharacter::Fire()
 	if (!HasAuthority() && Weapon) {
 		Weapon->Fire();
 	}
-
+	
 	if (FireAnimation)
 	{
 		// Get the animation object for the arms mesh
