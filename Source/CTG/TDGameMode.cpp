@@ -26,6 +26,10 @@ AActor* ATDGameMode::ChoosePlayerStart_Implementation(AController* Player)
 	return PlayerTeamStarts[FMath::RandRange(0, PlayerTeamStarts.Num() - 1)];
 }
 
+
+/*
+Transition from postlogin to using startplay
+*/
 void ATDGameMode::PostLogin(APlayerController* PlayerController)
 {
 	Super::PostLogin(PlayerController);
@@ -34,26 +38,18 @@ void ATDGameMode::PostLogin(APlayerController* PlayerController)
 
 	static int LastTeam = 0;
 	ATDPlayerState* PlayerState = PlayerController->GetPlayerState<ATDPlayerState>();
-	PlayerState->SetTeam(LastTeam);
-	UE_LOG(LogTemp, Warning, TEXT("Player joined team %i"), PlayerState->GetTeam()
-	);
+	PlayerState->Team = LastTeam;
+	UE_LOG(LogTemp, Warning, TEXT("Player joined team %i"), PlayerState->Team);
 	LastTeam = LastTeam == 0? 1 : 0; // Bitwise AND To switch between 0 and 1
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("Player joined Team: %i"), PlayerState->Team));
+	if (PlayerController->IsLocalController()) {
+		Cast<AFPSPlayerController>(PlayerController)->CreateUI();
+		Cast<AFPSPlayerController>(PlayerController)->UpdateUI();
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, TEXT("PlayerController was not local"));
+	}
 
-	//TArray<ATDPlayerStart*> PlayerTeamStarts;
-
-	//ATDPlayerState* CurrentPlayerState = PlayerController->GetPlayerState<ATDPlayerState>();
-	//for (TActorIterator<ATDPlayerStart> It(GetWorld()); It; ++It)
-	//{
-	//	if (CurrentPlayerState->GetTeam() == It->Team) {
-	//		PlayerTeamStarts.Add(*It);
-	//	}
-	//}
-	//ATDPlayerStart* FinalSpawnPoint = PlayerTeamStarts[FMath::RandRange(0, PlayerTeamStarts.Num() - 1)];
-
-	//UE_LOG(LogTemp, Warning, TEXT("Team: %i, Had %i Possible spawn locations"), PlayerState->GetTeam(), PlayerTeamStarts.Num());
-
-	//auto NewCharacter = GetWorld()->SpawnActor<APawn>(DefaultPawnClass, FinalSpawnPoint->GetActorLocation(), FinalSpawnPoint->GetActorRotation());
-	//PlayerController->Possess(NewCharacter);
 }
 
 void ATDGameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
@@ -66,12 +62,11 @@ void ATDGameMode::BeginPlay()
 	Super::BeginPlay();
 	FTimerHandle UnusedHandle;
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ATDGameMode::DefaultTimer, GetWorldSettings()->GetEffectiveTimeDilation(), true);
-	for (TActorIterator<AFPSPlayerController> It(GetWorld()); It; ++It)
-	{
-		if (It->GetCharacter() == nullptr) {
-			
-		}
-	}
+}
+
+void ATDGameMode::StartPlay()
+{
+	Super::StartPlay();
 }
 
 void ATDGameMode::OnPlayerEliminated(AController* Eliminator, AController* EliminatedPlayer)
@@ -92,8 +87,8 @@ void ATDGameMode::OnPlayerEliminated(AController* Eliminator, AController* Elimi
 	}
 
 	if (EliminatorPS != nullptr) {
-		GetGameState<ATDGameStateBase>()->TeamScores[Eliminator->GetPlayerState<ATDPlayerState>()->GetTeam()]++; //Increment the team's score/elims
-		UE_LOG(LogTemp, Warning, TEXT("Team %i got a kill!"), Eliminator->GetPlayerState<ATDPlayerState>()->GetTeam());
+		GetGameState<ATDGameStateBase>()->TeamScores[Eliminator->GetPlayerState<ATDPlayerState>()->Team]++; //Increment the team's score/elims
+		UE_LOG(LogTemp, Warning, TEXT("Team %i got a kill!"), Eliminator->GetPlayerState<ATDPlayerState>()->Team);
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("EliminatorPS was nullptr"));
@@ -104,8 +99,8 @@ void ATDGameMode::OnPlayerEliminated(AController* Eliminator, AController* Elimi
 	// Display to everyone's UI Instigator Eliminated EliminatedPlayer
 
 	// Determine whether or not a team has now won due to the elimination & call OnTeamWin if a team has won
-	if (HasTeamWon(EliminatorPS->GetTeam())) {
-		OnTeamWin(EliminatorPS->GetTeam());
+	if (HasTeamWon(EliminatorPS->Team)) {
+		OnTeamWin(EliminatorPS->Team);
 	}
 }
 

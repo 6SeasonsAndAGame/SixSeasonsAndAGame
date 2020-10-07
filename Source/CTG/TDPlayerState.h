@@ -14,18 +14,20 @@ class CTG_API ATDPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 
-	uint8 Team;
-	uint32 TimesEliminated = 0;
-	uint32 PlayerElims = 0;
+
 public:
 	ATDPlayerState();
 
-	uint8 GetTeam() { return Team; }
-	//uint32 GetPlayerScore() { return PlayerElims * 100; }
 	uint32 GetPlayerElims() { return PlayerElims; }
 	uint32 GetTimesEliminated() { return TimesEliminated; }
 
-	void SetTeam(uint8 _Team) { Team = _Team; }
 	void OnEliminated() { TimesEliminated++; }
 	void OnPlayerEliminate() { PlayerElims++; }
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int Team;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int TimesEliminated = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int PlayerElims = 0;
 };

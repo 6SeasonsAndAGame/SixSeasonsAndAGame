@@ -67,5 +67,7 @@ public:
 
 	void SetOwningPawn(class AFPSCharacter* NewOwner) { OwningPawn = NewOwner; }
 
+	AFPSCharacter* GetOwningPawn() { return OwningPawn; }
+
 	TSubclassOf<UDamageType> GetDamageType() { return DamageType; }
 };

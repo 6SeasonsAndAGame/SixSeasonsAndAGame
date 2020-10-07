@@ -7,6 +7,7 @@
 #include "FPSCharacter.h"
 #include "Weapon.h"
 #include "Kismet/GameplayStatics.h"
+#include "TDPlayerState.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -46,11 +47,22 @@ AProjectile::AProjectile()
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	auto Character = Cast<AFPSCharacter>(OtherActor);
-	// Only add impulse and destroy projectile if we hit a physics
+
+
 	if (Character != nullptr && Character != GetOwner())
 	{
-		if (!HasAuthority()) {
-			ServerOnHit(HitComp, OtherActor, OtherComp, NormalImpulse, Hit);
+		int OtherTeam = Character->GetPlayerState<ATDPlayerState>()->Team;
+		int MyTeam = Cast<AWeapon>(GetOwner())->GetOwningPawn()->GetPlayerState<ATDPlayerState>()->Team;
+		if (MyTeam != OtherTeam) {
+			if (!HasAuthority()) {
+				ServerOnHit(HitComp, OtherActor, OtherComp, NormalImpulse, Hit);
+			}
+			else {
+				UGameplayStatics::ApplyPointDamage(Character, Cast<AWeapon>(GetOwner())->GetDamage(), NormalImpulse, Hit, GetInstigator()->GetController(), this, Cast<AWeapon>(GetOwner())->GetDamageType());
+			}
+		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("Players are on the same team"))
 		}
 	}
 	if (OtherActor != GetOwner() && OtherActor != GetInstigator()) {
