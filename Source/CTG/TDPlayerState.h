@@ -14,9 +14,9 @@ class CTG_API ATDPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 
-
 public:
 	ATDPlayerState();
+	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
 
 	uint32 GetPlayerElims() { return PlayerElims; }
 	uint32 GetTimesEliminated() { return TimesEliminated; }
@@ -24,10 +24,12 @@ public:
 	void OnEliminated() { TimesEliminated++; }
 	void OnPlayerEliminate() { PlayerElims++; }
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	int Team;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int TimesEliminated = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int PlayerElims = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Transient)
+	int TimesEliminated;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Transient)
+	int PlayerElims;
 };

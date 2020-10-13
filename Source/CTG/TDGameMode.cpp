@@ -26,10 +26,6 @@ AActor* ATDGameMode::ChoosePlayerStart_Implementation(AController* Player)
 	return PlayerTeamStarts[FMath::RandRange(0, PlayerTeamStarts.Num() - 1)];
 }
 
-
-/*
-Transition from postlogin to using startplay
-*/
 void ATDGameMode::PostLogin(APlayerController* PlayerController)
 {
 	Super::PostLogin(PlayerController);
@@ -42,14 +38,12 @@ void ATDGameMode::PostLogin(APlayerController* PlayerController)
 	UE_LOG(LogTemp, Warning, TEXT("Player joined team %i"), PlayerState->Team);
 	LastTeam = LastTeam == 0? 1 : 0; // Bitwise AND To switch between 0 and 1
 	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("Player joined Team: %i"), PlayerState->Team));
-	if (PlayerController->IsLocalController()) {
-		Cast<AFPSPlayerController>(PlayerController)->CreateUI();
-		Cast<AFPSPlayerController>(PlayerController)->UpdateUI();
-	}
-	else {
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, TEXT("PlayerController was not local"));
-	}
 
+	AFPSPlayerController* Controller = Cast<AFPSPlayerController>(PlayerController);
+	if (Controller != nullptr) {
+		Controller->CreateUI();
+		Controller->UpdateUI();
+	}
 }
 
 void ATDGameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
@@ -116,12 +110,11 @@ void ATDGameMode::OnTeamWin(uint8 WinningTeam)
 
 bool ATDGameMode::HasTeamWon(uint8 Team)
 {
-	for (auto& TeamScore : GetGameState<ATDGameStateBase>()->TeamScores) {
-		if (TeamScore >= GetGameState<ATDGameStateBase>()->MaxTeamScore) {
-			return true;
-		}
-	}
-	return false;
+	auto TeamScore = GetGameState<ATDGameStateBase>()->TeamScores[Team];
+	if (TeamScore >= GetGameState<ATDGameStateBase>()->MaxTeamScore)
+		return true;
+	else
+		return false;
 }
 
 void ATDGameMode::DefaultTimer()

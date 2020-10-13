@@ -18,12 +18,17 @@ public:
 	AFPSPlayerController();
 
 	virtual void SetupInputComponent() override;
-	
-	UFUNCTION(BlueprintImplementableEvent)
+
+
+	UFUNCTION(Client, Reliable)
 		void CreateUI();
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(Client, Reliable)
 		void UpdateUI();
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnCreateUI();
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnUpdateUI();
 };
