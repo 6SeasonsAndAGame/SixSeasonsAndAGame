@@ -10,6 +10,7 @@
 #include "FPSPlayerController.h"
 #include "TDGameMode.h"
 #include "Weapon.h"
+#include "Blueprint/UserWidget.h"
 
 
 // Sets default values
@@ -135,7 +136,8 @@ void AFPSCharacter::MoveRight(float Axis)
 void AFPSCharacter::Fire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("AFPSCharacter::Fire() called"))
-	if (!HasAuthority() && Weapon) {
+	
+	if (Weapon) {
 		Weapon->Fire();
 	}
 	
