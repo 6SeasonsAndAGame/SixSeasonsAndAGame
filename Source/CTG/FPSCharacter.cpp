@@ -101,6 +101,12 @@ void AFPSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (StunnedSec > 0) {
+		StunnedSec -= DeltaTime;
+	}
+	if (StunDelaySec > 0) {
+		StunDelaySec -= DeltaTime;
+	}
 }
 
 // Called to bind functionality to input
@@ -125,16 +131,24 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void AFPSCharacter::MoveForward(float Axis)
 {
-	AddMovementInput(GetActorForwardVector(), Axis);
+	if (StunnedSec <= 0) {
+		AddMovementInput(GetActorForwardVector(), Axis);
+	}
 }
 
 void AFPSCharacter::MoveRight(float Axis)
 {
-	AddMovementInput(GetActorRightVector(), Axis);
+	if (StunnedSec <= 0) {
+		AddMovementInput(GetActorRightVector(), Axis);
+	}
 }
 
 void AFPSCharacter::Fire()
 {
+	if (StunnedSec > 0) {
+		return;
+	}
+
 	UE_LOG(LogTemp, Warning, TEXT("AFPSCharacter::Fire() called"))
 	
 	if (Weapon) {
@@ -184,8 +198,17 @@ FName AFPSCharacter::GetWeaponSocket()
 	return WeaponSocket;
 }
 
+void AFPSCharacter::Stun() {
+	StunnedSec = 1;
+	StunDelaySec = 5;
+}
+
 float AFPSCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	if (StunDelaySec <= 0){
+		Stun();
+	}
+
 	float StartingHealth = Health;
 	Health -= DamageAmount;
 	Health = FMath::Clamp(Health, 0.0f, MaxHealth);
