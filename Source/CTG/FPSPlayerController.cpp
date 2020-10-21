@@ -11,3 +11,14 @@ void AFPSPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 }
+
+
+void AFPSPlayerController::CreateUI_Implementation() 
+{
+	OnCreateUI();
+}
+
+void AFPSPlayerController::UpdateUI_Implementation() 
+{
+	OnUpdateUI();
+}

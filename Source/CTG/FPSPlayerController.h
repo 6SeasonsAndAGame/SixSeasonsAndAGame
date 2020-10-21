@@ -14,10 +14,21 @@ class CTG_API AFPSPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
-
-protected:
 public:
 	AFPSPlayerController();
 
 	virtual void SetupInputComponent() override;
+
+
+	UFUNCTION(Client, Reliable)
+		void CreateUI();
+
+	UFUNCTION(Client, Reliable)
+		void UpdateUI();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnCreateUI();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnUpdateUI();
 };

@@ -23,6 +23,8 @@ public:
 
 	virtual void BeginPlay() override;
 
+	virtual void StartPlay() override;
+
 	void OnPlayerEliminated(class AController* Eliminator, class AController* EliminatedPlayer);
 	void OnTeamWin(uint8 WinningTeam);
 	bool HasTeamWon(uint8 Team);
