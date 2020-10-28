@@ -41,20 +41,6 @@
 			]
 		},
 		{
-			"Name": "LightExplorer",
-			"Enabled": true,
-			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/4dc7591f494343f1ae6cac5192bb1f62"
-		},
-		{
-			"Name": "LDAssistant",
-			"Enabled": true,
-			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/51c5a9a0d5f84beba23aab69bed8d28c"
-		},
-		{
-			"Name": "MultiUserClient",
-			"Enabled": true
-		},
-		{
 			"Name": "DonMeshPainting",
 			"Enabled": true,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/d0ef1f750b5246b297d084b6f8355c13"
