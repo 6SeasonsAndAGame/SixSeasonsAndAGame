@@ -1,0 +1,28 @@
+{
+	"FileVersion": 3,
+	"Version": 8,
+	"VersionName": "8.0",
+	"FriendlyName": "Don's Mesh Painting with Paint Blob Collisions",
+	"Description": "Rapidly paint visual FX on characters/landscapes/props or boost your gameplay with paint blob collisions. Multiplayer support, Decal projection, multiple UV workflows all supported out-of-the-box with just one Blueprint node and a super-easy workflow.",
+	"Category": "Visual Effects & Collisions",
+	"CreatedBy": "Venugopalan Sreedharan",
+	"CreatedByURL": "http://www.drunkonnectar.com",
+	"DocsURL": "http://www.drunkonnectar.com/dynamic-mesh-effects-unreal-engine/knowledge-base/",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/d0ef1f750b5246b297d084b6f8355c13",
+	"SupportURL": "https://forums.unrealengine.com/showthread.php?144528-DoN-s-Mesh-Painting-With-Paint-Blob-Collisions!",
+	"EngineVersion": "4.25.0",
+	"CanContainContent": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "DonMeshPainting",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault",
+			"WhitelistPlatforms": [
+				"Win64",
+				"Win32",
+				"Linux"
+			]
+		}
+	]
+}
