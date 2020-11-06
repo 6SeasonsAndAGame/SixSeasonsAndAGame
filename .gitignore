@@ -56,8 +56,8 @@ Build/*
 !Build/*/
 Build/*/**
 !Build/*/PakBlacklist*.txt
-!Build/*/Plugins/Wwise/*.dll
-!Build/*/Plugins/Wwise/*.lib
+
+
 
 # Don't ignore icon files in Build
 !Build/**/*.ico
@@ -71,6 +71,7 @@ Saved/*
 # Compiled source files for the engine to use
 Intermediate/*
 Plugins/*/Intermediate/*
+Plugins/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
