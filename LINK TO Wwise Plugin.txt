@@ -1,0 +1,11 @@
+Link to download Wwise Plugin:
+
+
+https://drive.google.com/file/d/1asjUfhDcQMeqcKIyvwbL34xCZFNkWc_T/view?usp=sharing
+
+
+
+Create a folder under the Plugins folder and name it "Wwise"
+
+Extract the download into the Wwise folder 
+
