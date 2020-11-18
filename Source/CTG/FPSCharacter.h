@@ -45,12 +45,21 @@ protected:
 	UPROPERTY(ReplicatedUsing = OnRep_Health, VisibleAnywhere, Category = Health)
 		float Health;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float StunnedSec;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float StunDelaySec;
+
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	virtual void PostInitializeComponents() override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	virtual void Stun();
 
 	UFUNCTION()
 	void OnRep_Health();
