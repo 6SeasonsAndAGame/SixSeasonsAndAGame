@@ -145,9 +145,12 @@
     <content url="file://C:/Program Files/Epic Games/UE_4.25/Engine/Plugins/Lumin/MagicLeapScreens" />
     <content url="file://C:/Program Files/Epic Games/UE_4.25/Engine/Plugins/Lumin/MagicLeapSharedFile" />
     <content url="file://C:/Program Files/Epic Games/UE_4.25/Engine/Plugins/Lumin/MagicLeapTablet" />
+    <content url="file://C:/Program Files/Epic Games/UE_4.25/Engine/Plugins/Marketplace/AutoSizeComments" />
+    <content url="file://C:/Program Files/Epic Games/UE_4.25/Engine/Plugins/Marketplace/EasyBallistics" />
     <content url="file://C:/Program Files/Epic Games/UE_4.25/Engine/Plugins/Marketplace/LDAssistant" />
     <content url="file://C:/Program Files/Epic Games/UE_4.25/Engine/Plugins/Marketplace/LightExplorer" />
     <content url="file://C:/Program Files/Epic Games/UE_4.25/Engine/Plugins/Marketplace/ModularSnapSystem" />
+    <content url="file://C:/Program Files/Epic Games/UE_4.25/Engine/Plugins/Marketplace/PowerIK" />
     <content url="file://C:/Program Files/Epic Games/UE_4.25/Engine/Plugins/Media/AjaMedia" />
     <content url="file://C:/Program Files/Epic Games/UE_4.25/Engine/Plugins/Media/AndroidCamera" />
     <content url="file://C:/Program Files/Epic Games/UE_4.25/Engine/Plugins/Media/AndroidMedia" />
