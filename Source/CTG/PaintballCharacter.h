@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "PaintballWB_Gameplay.h"
 #include "GameFramework/Character.h"
 #include "PaintballCharacter.generated.h"
 
@@ -18,7 +20,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	
 	//void DodgeStaminaTick();
 
 	// should only be called on the server
@@ -30,6 +34,8 @@ protected:
 	// executes on owning client
 	//void Client_UpdateDodgeStaminaDecrementScalar();
 
+
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -37,22 +43,30 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(BlueprintReadOnly)
-	float Cpp_DodgeStamina;
+	UPROPERTY(BlueprintReadWrite)
+	class UPaintballWB_Gameplay* Cpp_WB_Gameplay;
+	
+	UPROPERTY(Replicated, BlueprintReadWrite)
+	float Cpp_DodgeStamina = 100.f;
 
 	UPROPERTY(BlueprintReadOnly)
-	float Cpp_DodgeStaminaDecrement;
+	float Cpp_DodgeStaminaDecrement = 101.f;
 	
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	float Cpp_DodgeStaminaDecrementScalar;
 
 	UPROPERTY(BlueprintReadOnly)
-	float Cpp_DodgeStaminaIncrement;
+	float Cpp_DodgeStaminaIncrement = 10.f;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	float Cpp_DodgeStaminaIncrementScalar;
 
 	UPROPERTY(BlueprintReadOnly)
-	float Cpp_MaxDodgeStamina;
-	
+	float Cpp_MaxDodgeStamina = 100.f;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void TestBlueprintEvent();
+
+	UFUNCTION(Client, Reliable)
+	void Cpp_Client_UpdateDodgeStamina();
 };
