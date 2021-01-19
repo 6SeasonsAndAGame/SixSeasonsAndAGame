@@ -20,20 +20,34 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	class APaintballCharacter* Cpp_PawnOwner;
+
+	UPROPERTY(BlueprintReadWrite)
+	UMaterialInstanceDynamic* Cpp_DynamicStaminaBar;
 	
 	UPROPERTY(BlueprintReadWrite)
-	UMaterialInstanceDynamic* Cpp_DynamicDamageIndicator;
+	UMaterialInstanceDynamic* Cpp_DynamicStaminaDamageBar;
 
+	UPROPERTY(BlueprintReadWrite)
+	UMaterialInstanceDynamic* Cpp_DynamicFortifyFill;
+
+	
+	
 	UPROPERTY(BlueprintReadWrite)
 	float Cpp_TargetDodgeStamina;
 	
 	UPROPERTY(BlueprintReadOnly)
 	float Cpp_DamageIndicatorLerpTime = 4.f;
 
-	UFUNCTION(BlueprintCallable)
-	void Cpp_UpdateDodgeStaminaDamageIndicator();
+	UPROPERTY(BlueprintReadOnly)
+	float Cpp_FortifyLerpTime = 6.f;
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintCallable)
+	void Cpp_UpdateDodgeStaminaDamageBar();
+
+	UFUNCTION(BlueprintCallable)
 	void Cpp_UpdateDodgeStamina();
+
+	UFUNCTION(BlueprintCallable)
+    void Cpp_UpdateDodgeStaminaDecrementScalar();
 	
 };
