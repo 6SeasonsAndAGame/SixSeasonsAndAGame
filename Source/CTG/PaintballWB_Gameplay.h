@@ -45,9 +45,9 @@ public:
 	void Cpp_UpdateDodgeStaminaDamageBar();
 
 	UFUNCTION(BlueprintCallable)
-	void Cpp_UpdateDodgeStamina();
+	void Cpp_UpdateDodgeStamina(const float& Stamina, const float& MaxStamina);
 
 	UFUNCTION(BlueprintCallable)
-    void Cpp_UpdateDodgeStaminaDecrementScalar();
+    void Cpp_UpdateDodgeStaminaDecrementScalar(const float& DecrementScalar);
 	
 };

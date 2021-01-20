@@ -4,21 +4,21 @@
 #include "PaintballWB_Gameplay.h"
 
 // Fits PawnOwner->DodgeStamina to 01 and sets DynamicStaminaBar to that value
-void UPaintballWB_Gameplay::Cpp_UpdateDodgeStamina()
+void UPaintballWB_Gameplay::Cpp_UpdateDodgeStamina(const float& Stamina, const float& MaxStamina)
 {
 	if (!Cpp_PawnOwner || !Cpp_DynamicStaminaBar)
 	{
 		return;
 	}
 	
-	const float PawnOwnerDodgeStamina = Cpp_PawnOwner->Cpp_DodgeStamina;
+	const float PawnOwnerDodgeStamina = Stamina;
 	float DodgeStaminaTo01 = 0.f;
 	
 	// avoid division by zero
 	if (PawnOwnerDodgeStamina != 0.f)
 	{
 		// fit to 01
-		DodgeStaminaTo01 = PawnOwnerDodgeStamina / Cpp_PawnOwner->Cpp_MaxDodgeStamina;
+		DodgeStaminaTo01 = PawnOwnerDodgeStamina / MaxStamina;
 	}
 
 	// save as member so that the (red) DynamicStaminaDamageBar can catch up via lerp
@@ -47,14 +47,14 @@ void UPaintballWB_Gameplay::Cpp_UpdateDodgeStaminaDamageBar()
 }
 
 //Lerps DynamicFortifyFill Decimal to match PawnOwner->DodgeStaminaDecrementScalar with drag
-void UPaintballWB_Gameplay::Cpp_UpdateDodgeStaminaDecrementScalar()
+void UPaintballWB_Gameplay::Cpp_UpdateDodgeStaminaDecrementScalar(const float& DecrementScalar)
 {
 	if (!Cpp_PawnOwner || !Cpp_DynamicFortifyFill)
 	{
 		return;
 	}
 
-	const float PawnOwnerDodgeStaminaDecrementScalar = Cpp_PawnOwner->Cpp_DodgeStaminaDecrementScalar;
+	const float PawnOwnerDodgeStaminaDecrementScalar = DecrementScalar;
 
 	float CurrentDecimalOut = 0.f;
 	Cpp_DynamicFortifyFill->GetScalarParameterValue(FName("Decimal"), CurrentDecimalOut);
