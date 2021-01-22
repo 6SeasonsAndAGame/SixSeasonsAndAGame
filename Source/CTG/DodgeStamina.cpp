@@ -79,7 +79,7 @@ void UDodgeStamina::DetermineScalars()
 	{
 		DecrementScalar = .25f; //DecrementScalars.Running;
 		IncrementScalar = .1f; //IncrementScalars.Running;
-		UE_LOG(LogTemp, Warning, TEXT("%f"), IncrementScalar);
+		//UE_LOG(LogTemp, Warning, TEXT("%f"), IncrementScalar);
 	}
 	else
 	{

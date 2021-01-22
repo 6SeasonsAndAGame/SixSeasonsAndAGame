@@ -4,6 +4,7 @@
 #include "PaintballCharacter.h"
 
 #include "GeneratedCodeHelpers.h"
+#include "Camera/CameraComponent.h"
 #include "UObject/Script.h"
 
 // Sets default values
@@ -12,11 +13,23 @@ APaintballCharacter::APaintballCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	SetReplicates(true);
+
+	CameraManager = CreateDefaultSubobject<UCameraManager>(FName("CameraManager"));
+	AddOwnedComponent(CameraManager);
 	
 	DodgeStamina = CreateDefaultSubobject<UDodgeStamina>(FName("DodgeStamina"));
 	AddOwnedComponent(DodgeStamina);
 	DodgeStamina->SetIsReplicated(true);
 	DodgeStamina->Init(&Cpp_WB_Gameplay, &Cpp_bIsRunning, &Cpp_bIsWalking, &Cpp_bIsDashSliding);
+}
+
+// Called in-editor whenever any of the actor's properties have been changed
+void APaintballCharacter::OnConstruction(const FTransform& Transform)
+{
+	if (CameraManager)
+	{
+		CameraManager->ConstructValues();
+	}
 }
 
 // Called when the game starts or when spawned
@@ -43,16 +56,116 @@ void APaintballCharacter::Tick(float DeltaTime)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("Original WB Gameplay invalid"));
 	}
+
+	if (HasAuthority())
+	{
+		TickWithAuthority(DeltaTime);
+	}
+}
+
+void APaintballCharacter::TickWithAuthority(float DeltaTime)
+{
+	TimeTillForceStopDashSlide = FMath::Clamp(TimeTillForceStopDashSlide - DeltaTime, 0.f, DashSlideTime); // Decrease TimeTillForceStopDashSlide by time passed every frame
 	
+	if (FMath::IsNearlyEqual(TimeTillForceStopDashSlide, 0.f)) // Use IsNearlyEqual to account for floating point errors
+	{
+		TryStopDashSlide();
+	}
 }
 
 // Called to bind functionality to input
 void APaintballCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	
+	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &APaintballCharacter::OnJumpPressed);
+	PlayerInputComponent->BindAction(FName("Jump"), IE_Released, this, &APaintballCharacter::OnJumpPressed);
+	
+	PlayerInputComponent->BindAction(FName("Crouch"), IE_Pressed, this, &APaintballCharacter::OnCrouchPressed);
 }
 
+
+// Input functions
+void APaintballCharacter::OnJumpPressed()
+{
+	if (Cpp_bIsDashSliding)
+	{
+		TryStopDashSlide();
+	}
+
+	if (bIsCrouched)
+	{
+		Blueprint_ForceUncrouch();
+	}
+	else
+	{
+		Jump();
+	}
+}
+
+void APaintballCharacter::OnJumpReleased()
+{
+	StopJumping();
+}
+
+void APaintballCharacter::OnCrouchPressed()
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnCrouchPressed"));
+	TryDashSlide();
+
+	Blueprint_OnCrouchPressed();
+}
+
+// May be called from the server or the client
+void APaintballCharacter::TryDashSlide()
+{
+	if (Cpp_bIsRunning && !Cpp_bIsDashSliding && GetCharacterMovement()->IsMovingOnGround())
+	{
+		Server_DashSlide();
+	}
+}
+
+// May be called from the server or the client
+void APaintballCharacter::TryStopDashSlide()
+{
+	if (Cpp_bIsDashSliding)
+	{
+		// To-do: Add Relative Camera Position
+		Server_Walk();
+		Server_SetIsDashSlidingFalse(); // Setting replicated variable via server function, in case TryStopDashSlide is called from the client
+	}
+}
+
+void APaintballCharacter::Server_SetIsDashSlidingFalse_Implementation()
+{
+	Cpp_bIsDashSliding = false;
+}
+
+void APaintballCharacter::Server_DashSlide_Implementation()
+{
+	// To-do: Add Relative Camera Position
+	TimeTillForceStopDashSlide = DashSlideTime;
+	GetCharacterMovement()->MaxWalkSpeed = DefaultMovementSpeed * DashSlideSpeedModifier;
+	Cpp_bIsDashSliding = true;
+}
+
+void APaintballCharacter::Server_Run_Implementation()
+{
+	if (Cpp_bIsDashSliding)
+	{
+		return;
+	}
+
+	GetCharacterMovement()->MaxWalkSpeed = DefaultMovementSpeed * RunSpeedModifier;
+	Cpp_bIsRunning = true;
+}
+
+// Replicated functions
+void APaintballCharacter::Server_Walk_Implementation()
+{
+	GetCharacterMovement()->MaxWalkSpeed = DefaultMovementSpeed;
+	Cpp_bIsRunning = false;
+}
 
 
 
