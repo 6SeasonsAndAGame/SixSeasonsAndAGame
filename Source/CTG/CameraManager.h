@@ -31,14 +31,17 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USpringArmComponent* SpringArmComponent = nullptr;
+	UFUNCTION(BlueprintCallable)
+	void SetSpringArmComponent(class USpringArmComponent* SpringArmComponentToSet);
+	
+	UPROPERTY(BlueprintReadOnly)
+	class USpringArmComponent* SpringArmComponent = nullptr;
 
-	UPROPERTY(EditAnywhere)
-	FVector OriginalPosition;
+	UPROPERTY(BlueprintReadOnly)
+	FVector OriginalPosition = FVector(0.f, 0.f, 0.f);
 
-	UPROPERTY(EditAnywhere)
-	FVector LowPosition;
+	UPROPERTY(BlueprintReadOnly)
+	FVector LowPosition = FVector(0.f, 0.f, 0.f);
 
 	UPROPERTY(EditAnywhere)
 	FVector LowPositionOffset = FVector(0.f, 0.f, -75.f);

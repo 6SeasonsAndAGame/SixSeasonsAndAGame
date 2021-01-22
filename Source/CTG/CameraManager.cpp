@@ -23,6 +23,12 @@ void UCameraManager::BeginPlay()
 	
 }
 
+void UCameraManager::SetSpringArmComponent(class USpringArmComponent* SpringArmComponentToSet)
+{
+	SpringArmComponent = SpringArmComponentToSet;
+	ConstructValues();
+}
+
 
 // Called every frame
 void UCameraManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -36,7 +42,7 @@ void UCameraManager::ConstructValues()
 {
 	if (!SpringArmComponent)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Can't ConstructValues, no CameraComponent set"))
+		UE_LOG(LogTemp, Warning, TEXT("Can't ConstructValues, no SpringArmComponent set"))
 		return;
 	}
 
@@ -44,8 +50,9 @@ void UCameraManager::ConstructValues()
 	LowPosition = SpringArmComponent->GetRelativeLocation() + LowPositionOffset;
 }
 
-void UCameraManager::SetPosition(EPosition Position)
+void UCameraManager::SetPosition(const EPosition Position)
 {
+	UE_LOG(LogTemp, Warning, TEXT("CameraManager::SetPosition"));
 	if (!SpringArmComponent)
 	{
 		return;
@@ -68,7 +75,8 @@ void UCameraManager::SetPosition(EPosition Position)
 
 	if (SelectedPosition)
 	{
-		//SpringArmComponent->SetRelativeLocation(*SelectedPosition);
+		SpringArmComponent->SetRelativeLocation(*SelectedPosition);
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *SelectedPosition->ToString())
 	}
 	else
 	{

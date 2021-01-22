@@ -59,8 +59,8 @@ public:
 	
 	UPROPERTY(Replicated, BlueprintReadWrite)
 	bool Cpp_bIsWalking;
-
-	UPROPERTY(Replicated, BlueprintReadWrite)
+	
+	UPROPERTY(ReplicatedUsing=OnRep_IsDashSliding, BlueprintReadWrite)
 	bool Cpp_bIsDashSliding;
 
 
@@ -119,4 +119,7 @@ public:
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
     void Server_SetIsDashSlidingFalse();
+
+	UFUNCTION()
+    void OnRep_IsDashSliding();
 };

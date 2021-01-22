@@ -26,10 +26,7 @@ APaintballCharacter::APaintballCharacter()
 // Called in-editor whenever any of the actor's properties have been changed
 void APaintballCharacter::OnConstruction(const FTransform& Transform)
 {
-	if (CameraManager)
-	{
-		CameraManager->ConstructValues();
-	}
+	
 }
 
 // Called when the game starts or when spawned
@@ -84,6 +81,14 @@ void APaintballCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction(FName("Crouch"), IE_Pressed, this, &APaintballCharacter::OnCrouchPressed);
 }
 
+void APaintballCharacter::OnRep_IsDashSliding()
+{
+	if (!Cpp_bIsDashSliding)
+	{
+		CameraManager->SetPosition(POSITION_Original);
+	}
+}
+
 
 // Input functions
 void APaintballCharacter::OnJumpPressed()
@@ -121,6 +126,7 @@ void APaintballCharacter::TryDashSlide()
 {
 	if (Cpp_bIsRunning && !Cpp_bIsDashSliding && GetCharacterMovement()->IsMovingOnGround())
 	{
+		CameraManager->SetPosition(POSITION_Low);
 		Server_DashSlide();
 	}
 }
@@ -131,10 +137,12 @@ void APaintballCharacter::TryStopDashSlide()
 	if (Cpp_bIsDashSliding)
 	{
 		// To-do: Add Relative Camera Position
+		CameraManager->SetPosition(POSITION_Original);
 		Server_Walk();
 		Server_SetIsDashSlidingFalse(); // Setting replicated variable via server function, in case TryStopDashSlide is called from the client
 	}
 }
+
 
 void APaintballCharacter::Server_SetIsDashSlidingFalse_Implementation()
 {
