@@ -4,8 +4,11 @@
 
 #include "CoreMinimal.h"
 
+#include "CameraManager.h"
+#include "DodgeStamina.h"
 #include "PaintballWB_Gameplay.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "PaintballCharacter.generated.h"
 
 UCLASS()
@@ -18,55 +21,105 @@ public:
 	APaintballCharacter();
 
 protected:
+	virtual void OnConstruction(const FTransform& Transform) override;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	
-	//void DodgeStaminaTick();
 
-	// should only be called on the server
-	//void LocalServerOnly_SetDodgeStamina(float NewValue);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float DashSlideTime = 1.2f;
 
-	// executes on owning client
-	//void Client_UpdateDodgeStamina();
-
-	// executes on owning client
-	//void Client_UpdateDodgeStaminaDecrementScalar();
-
-
+	float TimeTillForceStopDashSlide = 0.f;
 	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Component references
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCameraManager* CameraManager = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UDodgeStamina* DodgeStamina = nullptr;
+	
+
+	// Other references
 	UPROPERTY(BlueprintReadWrite)
-	class UPaintballWB_Gameplay* Cpp_WB_Gameplay;
+	class UPaintballWB_Gameplay* Cpp_WB_Gameplay = nullptr;
+
+	
+	// Replicated player states
+	UPROPERTY(Replicated, BlueprintReadWrite)
+	bool Cpp_bIsRunning;
 	
 	UPROPERTY(Replicated, BlueprintReadWrite)
-	float Cpp_DodgeStamina = 100.f;
-
-	UPROPERTY(BlueprintReadOnly)
-	float Cpp_DodgeStaminaDecrement = 101.f;
+	bool Cpp_bIsWalking;
 	
+	UPROPERTY(ReplicatedUsing=OnRep_IsDashSliding, BlueprintReadWrite)
+	bool Cpp_bIsDashSliding;
+
+
+	// Non replicated player states
 	UPROPERTY(BlueprintReadWrite)
-	float Cpp_DodgeStaminaDecrementScalar;
+	bool Cpp_bRunningIsPaused;
 
-	UPROPERTY(BlueprintReadOnly)
-	float Cpp_DodgeStaminaIncrement = 10.f;
 
-	UPROPERTY(BlueprintReadWrite)
-	float Cpp_DodgeStaminaIncrementScalar;
+	// Default values
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DefaultMovementSpeed = 475.f;
 
-	UPROPERTY(BlueprintReadOnly)
-	float Cpp_MaxDodgeStamina = 100.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float RunSpeedModifier = 1.75f;
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void TestBlueprintEvent();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DashSlideSpeedModifier = 1.75f;
+	
+	// Blueprint Implementable Events
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void Blueprint_ForceUncrouch();
 
-	UFUNCTION(Client, Reliable)
-	void Cpp_Client_UpdateDodgeStamina();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void Blueprint_OnCrouchPressed();
+	
+	
+	// Input functions
+	UFUNCTION()
+	void OnJumpPressed();
+
+	UFUNCTION()
+	void OnJumpReleased();
+
+	UFUNCTION()
+	void OnCrouchPressed();
+
+
+	// Regular functions
+	void TickWithAuthority(float DeltaTime);
+
+	void TryDashSlide();
+
+	UFUNCTION(BlueprintCallable)
+	void TryStopDashSlide();
+
+	
+	// Replicated functions
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+    void Server_Walk();
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void Server_Run();
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+    void Server_DashSlide();
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+    void Server_SetIsDashSlidingFalse();
+
+	UFUNCTION()
+    void OnRep_IsDashSliding();
 };
