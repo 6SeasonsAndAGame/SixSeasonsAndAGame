@@ -106,6 +106,8 @@ void APaintballCharacter::OnJumpPressed()
 	{
 		Jump();
 	}
+
+	
 }
 
 void APaintballCharacter::OnJumpReleased()
