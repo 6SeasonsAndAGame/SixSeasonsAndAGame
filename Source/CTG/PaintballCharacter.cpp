@@ -117,7 +117,7 @@ void APaintballCharacter::OnJumpReleased()
 
 void APaintballCharacter::OnCrouchPressed()
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnCrouchPressed"));
+	//UE_LOG(LogTemp, Warning, TEXT("OnCrouchPressed"));
 	TryDashSlide();
 
 	Blueprint_OnCrouchPressed();
