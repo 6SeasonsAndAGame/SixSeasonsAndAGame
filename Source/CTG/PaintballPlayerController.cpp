@@ -1,5 +1,0 @@
-// None
-
-
-#include "PaintballPlayerController.h"
-
