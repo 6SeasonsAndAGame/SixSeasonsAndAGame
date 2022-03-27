@@ -13,8 +13,8 @@
 UENUM(BlueprintType)
 enum EPosition
 {
-	POSITION_Original   UMETA(DisplayName = "Original"),
-	POSITION_Low		UMETA(DisplayName = "Low")
+	POSITION_Original UMETA(DisplayName = "Original"),
+	POSITION_Low UMETA(DisplayName = "Low")
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

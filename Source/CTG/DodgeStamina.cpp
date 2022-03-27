@@ -2,7 +2,7 @@
 
 
 #include "DodgeStamina.h"
-#include "PaintballWB_Gameplay.h"
+
 #include "GeneratedCodeHelpers.h"
 
 

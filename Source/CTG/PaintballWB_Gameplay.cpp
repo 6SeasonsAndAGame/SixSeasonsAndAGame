@@ -2,7 +2,6 @@
 
 
 #include "PaintballWB_Gameplay.h"
-#include "PaintballCharacter.h"
 
 // Fits PawnOwner->DodgeStamina to 01 and sets DynamicStaminaBar to that value
 void UPaintballWB_Gameplay::Cpp_UpdateDodgeStamina(const float& Stamina, const float& MaxStamina)

@@ -2,11 +2,10 @@
 
 
 #include "PaintballCharacter.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "PaintballWB_Gameplay.h"
+
 #include "GeneratedCodeHelpers.h"
-#include "CameraManager.h"
-#include "DodgeStamina.h"
+#include "Camera/CameraComponent.h"
+#include "UObject/Script.h"
 
 // Sets default values
 APaintballCharacter::APaintballCharacter()
@@ -91,9 +90,7 @@ void APaintballCharacter::OnRep_IsDashSliding()
 }
 
 
-/* Input functions
- * Called on Key down and up
- * This allows for automatically jumping after crouching/sliding */
+// Input functions
 void APaintballCharacter::OnJumpPressed()
 {
 	if (Cpp_bIsDashSliding)
@@ -179,3 +176,13 @@ void APaintballCharacter::Server_Walk_Implementation()
 	GetCharacterMovement()->MaxWalkSpeed = DefaultMovementSpeed;
 	Cpp_bIsRunning = false;
 }
+
+
+
+
+
+
+
+
+
+

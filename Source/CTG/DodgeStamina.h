@@ -3,7 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "Components/ActorComponent.h"
+#include "PaintballWB_Gameplay.h"
+
 #include "DodgeStamina.generated.h"
 
 USTRUCT(BlueprintType)

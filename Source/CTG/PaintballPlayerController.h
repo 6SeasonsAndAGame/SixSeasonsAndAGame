@@ -13,5 +13,9 @@ UCLASS()
 class CTG_API APaintballPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+//public:
+
+	//UPROPERTY(BlueprintReadWrite)
 	
 };

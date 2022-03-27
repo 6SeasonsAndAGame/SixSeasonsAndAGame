@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "PaintballCharacter.h"
 #include "Blueprint/UserWidget.h"
 #include "PaintballWB_Gameplay.generated.h"
 

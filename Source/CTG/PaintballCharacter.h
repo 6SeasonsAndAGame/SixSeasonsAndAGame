@@ -3,7 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "CameraManager.h"
+#include "DodgeStamina.h"
+#include "PaintballWB_Gameplay.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "PaintballCharacter.generated.h"
 
 UCLASS()
