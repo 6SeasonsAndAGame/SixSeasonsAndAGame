@@ -10,6 +10,7 @@ AEntitySpawner::AEntitySpawner()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	GetBrushComponent()->SetMobility(EComponentMobility::Movable);
+	SetActorEnableCollision(false);
 }
 
 void AEntitySpawner::BeginPlay()
