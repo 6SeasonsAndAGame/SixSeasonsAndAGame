@@ -6,6 +6,7 @@
 #include "GameFramework/Volume.h"
 #include "EntitySpawner.generated.h"
 
+class ASpawnerRegulator;
 
 UENUM(BlueprintType, meta=(DisplayName="SpawnState"))
 enum class ESpawnState : uint8
@@ -29,7 +30,6 @@ class CTG_API AEntitySpawner final : public AVolume
 public:
 	AEntitySpawner();
 	
-	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginDestroy() override;
 
@@ -48,6 +48,8 @@ public:
 	void CleanDeactivate();
 	
 protected:
+	virtual void BeginPlay() override;
+	
 	// The classes of the Entities to spawn
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawner", meta=(DisplayThumbnail="true"))
 	TArray<TSubclassOf<APawn>> EntityClasses;
@@ -123,6 +125,14 @@ protected:
 	// The minimum number of Entities that can be alive before any are respawned
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawner|Respawn")
 	int MinNumberBeforeRespawn = 2;
+
+	/** The regulator used to control this spawner
+	 * NOTE: Do not add a Regulator after Begin Play directly. Use function *AddRegulator* instead */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<ASpawnerRegulator*> Regulators;
+
+	UFUNCTION(BlueprintCallable)
+	void AddRegulator(ASpawnerRegulator* Regulator);
 	
 	// Gets spawn points from random points in the volume
 	UFUNCTION(BlueprintCallable, Category="Spawner")

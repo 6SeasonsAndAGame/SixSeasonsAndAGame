@@ -4,6 +4,7 @@
 #include "Components/BrushComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Zombies/SpawnerRegulator.h"
 
 
 AEntitySpawner::AEntitySpawner()
@@ -23,6 +24,12 @@ void AEntitySpawner::BeginPlay()
 	}
 	
 	SetActorTickEnabled(bCanRespawn);
+
+	for (ASpawnerRegulator* Regulator : Regulators)
+	{
+		Regulator->OnActivated.AddDynamic(this, &AEntitySpawner::Activate);
+		Regulator->OnDeactivated.AddDynamic(this, &AEntitySpawner::Deactivate);
+	}
 }
 
 void AEntitySpawner::BeginDestroy()
@@ -103,6 +110,13 @@ bool AEntitySpawner::LineTraceToGround(FVector &NewPoint, FRotator &OutRotation)
 		return true;
 	}
 	return false;
+}
+
+void AEntitySpawner::AddRegulator(ASpawnerRegulator* Regulator)
+{
+	Regulators.Add(Regulator);
+	Regulator->OnActivated.AddDynamic(this, &AEntitySpawner::Activate);
+	Regulator->OnDeactivated.AddDynamic(this, &AEntitySpawner::Deactivate);
 }
 
 void AEntitySpawner::GetRandomSpawnPoints(int Amount)
@@ -194,9 +208,11 @@ APawn* AEntitySpawner::SpawnEntity(FVector SpawnPoint, const FRotator Rotation)
 	SpawnPoint.Z += SpawnZOffset;
 	
 	const int RandActor = FMath::RandRange(0, EntityClasses.Num() - 1);
-	checkf(EntityClasses[RandActor], TEXT("AIEntityClasses Array in SpawnerVolume Object has empty field"));
-
-	return GetWorld()->SpawnActor<APawn>(EntityClasses[RandActor], SpawnPoint, Rotation, SpawnParams);
+	if (ensureMsgf(EntityClasses[RandActor], TEXT("AIEntityClasses Array in SpawnerVolume Object has empty field")))
+	{
+		return GetWorld()->SpawnActor<APawn>(EntityClasses[RandActor], SpawnPoint, Rotation, SpawnParams);
+	}
+	return nullptr;
 }
 
 void AEntitySpawner::Spawn()
