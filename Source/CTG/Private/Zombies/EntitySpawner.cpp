@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Zombies/EntitySpawner.h"
+
+#include "DrawDebugHelpers.h"
 #include "Components/BrushComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -90,7 +92,7 @@ bool AEntitySpawner::LineTraceToGround(FVector &NewPoint, FRotator &OutRotation)
 	FHitResult OutHit(ForceInit);
 	FVector Start = NewPoint;
 	
-	FVector End = FVector(Start.X, Start.Y, InOrigin.Z * InBoxExtent.Z * -1);
+	FVector End = FVector(Start.X, Start.Y, abs(InOrigin.Z * InBoxExtent.Z) * -1);
 	if (bBoundingBoxIsLowest)
 	{
 		End = FVector(Start.X, Start.Y, InOrigin.Z - InBoxExtent.Z);
@@ -125,10 +127,11 @@ void AEntitySpawner::GetRandomSpawnPoints(int Amount)
 	{
 		FVector InOrigin;
 		FVector InBoxExtent;
-		FBox BoundingBox = GetComponentsBoundingBox();
+		FBox BoundingBox = GetComponentsBoundingBox(true);
 		BoundingBox.GetCenterAndExtents(InOrigin, InBoxExtent);
 		FVector NewPoint = UKismetMathLibrary::RandomPointInBoundingBox(InOrigin, InBoxExtent);
 		FRotator OutRotation;
+		
 		if (LineTraceToGround(NewPoint, OutRotation))
 		{
 			SpawnPoints.Add(NewPoint);
