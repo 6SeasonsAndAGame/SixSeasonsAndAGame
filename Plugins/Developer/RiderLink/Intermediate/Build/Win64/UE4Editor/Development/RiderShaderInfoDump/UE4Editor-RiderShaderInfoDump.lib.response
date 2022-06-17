@@ -6,7 +6,7 @@
 /NAME:"UE4Editor-RiderShaderInfoDump.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"E:\SixSeasonsAndAGame\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderShaderInfoDump\RiderShaderInfoDump.cpp.obj"
-"E:\SixSeasonsAndAGame\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderShaderInfoDump\Default.rc2.res"
-/OUT:"E:\SixSeasonsAndAGame\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderShaderInfoDump\UE4Editor-RiderShaderInfoDump.lib"
+"C:\Users\Owner\Documents\GitHub\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderShaderInfoDump\RiderShaderInfoDump.cpp.obj"
+"C:\Users\Owner\Documents\GitHub\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderShaderInfoDump\Default.rc2.res"
+/OUT:"C:\Users\Owner\Documents\GitHub\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderShaderInfoDump\UE4Editor-RiderShaderInfoDump.lib"
 /INCLUDE:IMPLEMENT_MODULE_RiderShaderInfoDump

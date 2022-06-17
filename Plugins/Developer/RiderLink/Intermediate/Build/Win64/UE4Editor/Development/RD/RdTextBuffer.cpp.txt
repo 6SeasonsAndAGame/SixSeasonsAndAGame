@@ -1,2 +1,2 @@
-E:\SixSeasonsAndAGame\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RD\Definitions.h
-E:\SixSeasonsAndAGame\Plugins\Developer\RiderLink\Source\RD\src\rd_gen_cpp\src\RdTextBuffer.h
+C:\Users\Owner\Documents\GitHub\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RD\Definitions.h
+C:\Users\Owner\Documents\GitHub\Plugins\Developer\RiderLink\Source\RD\src\rd_gen_cpp\src\RdTextBuffer.h

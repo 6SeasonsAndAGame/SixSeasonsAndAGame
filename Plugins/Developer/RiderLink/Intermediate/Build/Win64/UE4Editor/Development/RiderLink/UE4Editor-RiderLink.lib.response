@@ -6,7 +6,7 @@
 /NAME:"UE4Editor-RiderLink.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"E:\SixSeasonsAndAGame\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLink\Module.RiderLink.cpp.obj"
-"E:\SixSeasonsAndAGame\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLink\Default.rc2.res"
-/OUT:"E:\SixSeasonsAndAGame\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLink\UE4Editor-RiderLink.lib"
+"C:\Users\Owner\Documents\GitHub\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLink\Module.RiderLink.cpp.obj"
+"C:\Users\Owner\Documents\GitHub\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLink\Default.rc2.res"
+/OUT:"C:\Users\Owner\Documents\GitHub\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLink\UE4Editor-RiderLink.lib"
 /INCLUDE:IMPLEMENT_MODULE_RiderLink
